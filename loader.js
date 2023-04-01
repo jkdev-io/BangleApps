@@ -11,7 +11,7 @@ if (window.location.host=="banglejs.com") {
   document.getElementById("apploaderlinks").innerHTML =
     'This is your local Bangle.js App Loader - you can try the <a href="https://banglejs.com/apps/">Official Version</a> here.';
 } else {
-  document.title += " [Unofficial]";
+  document.title += " [bangleapps.byjkdev.me]";
   document.getElementById("apploaderlinks").innerHTML =
     'This is not the official Bangle.js App Loader - you can try the <a href="https://banglejs.com/apps/">Official Version</a> here.';
 }
