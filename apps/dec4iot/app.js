@@ -114,11 +114,11 @@ var n = 0;
 // redraw the screen
 function draw(text) {
   g.reset().clearRect(Bangle.appRect);
-  g.setFont("Vector",60).setFontAlign(0,0).drawString(text,g.getWidth()/2,g.getHeight()/2 + 30);
+  g.setFont("Vector",10).setFontAlign(0,0).drawString(text,g.getWidth()/2,g.getHeight()/2 + 30);
 }
 
 Bangle.http("https://pur3.co.uk/hello.txt").then(data=>{
-  draw(data);
+  draw(data.text);
 });
 
 // draw("Hello Lads");
