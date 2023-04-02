@@ -117,9 +117,10 @@ function draw(text) {
   g.setFont("Vector",60).setFontAlign(0,0).drawString(text,g.getWidth()/2,g.getHeight()/2 + 30);
 }
 
-Bangle.http("https://pur3.co.uk/hello.txt").then(data=>{
-  console.log("Got ",data);
-});
+// Bangle.http("https://pur3.co.uk/hello.txt").then(data=>{
+//   draw(data);
+// });
+
 
 // Load widgets
 Bangle.loadWidgets();
