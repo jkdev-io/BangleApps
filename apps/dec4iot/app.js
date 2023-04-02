@@ -119,7 +119,9 @@ function draw(text) {
   g.setFont("Vector",60).setFontAlign(0,0).drawString(text,g.getWidth()/2,g.getHeight()/2 + 30);
 }
 
-draw(http_lib.httpGet("http://10.0.0.88:8000/test.json").text);
+http_lib.httpGet("https://pur3.co.uk/hello.txt").then(data=>{
+  console.log("Got ",data);
+});
 
 // Load widgets
 Bangle.loadWidgets();
