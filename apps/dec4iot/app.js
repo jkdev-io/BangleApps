@@ -118,7 +118,8 @@ function draw(text) {
 }
 
 Bangle.http("https://pur3.co.uk/hello.txt").then(data=>{
-  draw(Object.keys(data));
+  console.log(Object.keys(data));
+  draw('HTTP success');
 });
 
 draw("Hello Lads");
