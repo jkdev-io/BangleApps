@@ -1,4 +1,112 @@
-// place your const, vars, functions or classes here
+const http_lib = require('dec4iot_lib_http');
+
+const SERVICE = "34defd2c-c8fe-b18e-9a70-591970cba32b";
+const ble_filler = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+
+//BLE Code
+const EspDownlink = {
+  characteristics: {},
+  advertiseUUIDs: [],
+
+  bindMe: function() {
+    let keys = Object.keys(this);
+    keys.forEach(e => {
+      if(e === "bindMe") { return; }
+      if(e.startsWith("__")) { return; }
+      if(typeof this[e] !== "function") { return; }
+
+      this[e].bind(this);
+
+      return;
+    });
+  },
+  startAdvertising: function(name) {
+    let advertiseThis = {};
+    let services = {};
+    services[SERVICE] = this.characteristics;
+    advertiseThis[SERVICE] = undefined;
+
+    NRF.setServices(services, { advertise: this.advertiseUUIDs, uart: false });
+
+    NRF.setAdvertising({}, {
+      "name": name,
+      "showName": true,
+      "manufacturer": 0x0590,
+      "manufacturerData": JSON.stringify({})
+    });
+  },
+  __charUpdate: function() {
+    let services = {};
+    services[SERVICE] = this.characteristics;
+
+    try {
+      NRF.updateServices(services);
+    } catch(e) {
+      if(e.message.includes("Can't update services until BLE restart")) { return; }
+      else { throw e; }
+    }
+  },
+  addCharacteristic: function(uuid, data) {
+    this.characteristics[uuid] = data;
+    this.advertiseUUIDs.push(uuid);
+    return this.characteristics;
+  },
+  updateCharacteristic: function(uuid, data) {
+    this.characteristics[uuid] = data;
+  },
+  updateCharacteristics: function() { this.__charUpdate(); }
+};
+(() => {
+  EspDownlink.bindMe.bind(EspDownlink);
+  EspDownlink.bindMe();
+})();
+const BleInit = {
+  "value": filler,
+  "readable": true,
+  "writable": false,
+  "notify": true
+};
+
+// Utility functions
+function hours(hours) {
+  return hours * 60 * 60 * 1000;
+}
+
+function minutes(minutes) {
+  return minutes * 60 * 1000;
+}
+
+function seconds(seconds) {
+  return seconds * 1000;
+}
+
+// Actual code from now
+const getSensorFuns = {
+  "battery": Puck.getBatteryPercentage,
+  "temperature": E.getTemperature,
+};
+
+const BleNumbers = {
+  "battery": 0x2A19,
+  "button": 0x2AE2,
+  "movement": 0x2C01,
+  "heartrate": 0x2A37,
+  "lat": 0x2AAE,
+  "long": 0x2AAF,
+  "barometricpressure": 0x2A6D,
+  "altitude": 0x2AB3,
+  "temperature": 0x2C02
+};
+
+const sensors = [
+  'battery',
+  'temperature',
+  'movement',
+  'button',
+  'heartrate',
+  'location',
+  'barometricpressure'
+];
 
 // clear the screen
 g.clear();
@@ -6,28 +114,12 @@ g.clear();
 var n = 0;
 
 // redraw the screen
-function draw() {
+function draw(text) {
   g.reset().clearRect(Bangle.appRect);
-  g.setFont("6x8").setFontAlign(0,0).drawString("Up / Down",g.getWidth()/2,g.getHeight()/2 - 20);
-  g.setFont("Vector",60).setFontAlign(0,0).drawString(n,g.getWidth()/2,g.getHeight()/2 + 30);
+  g.setFont("Vector",60).setFontAlign(0,0).drawString(text,g.getWidth()/2,g.getHeight()/2 + 30);
 }
 
-// Respond to user input
-Bangle.setUI({mode: "updown"}, function(dir) {
-  if (dir<0) {
-    n--;
-    draw();
-  } else if (dir>0) {
-    n++;
-    draw();
-  } else {
-    n = 0;
-    draw();
-  }
-});
-
-// First draw...
-draw();
+draw(http_lib.httpGet("http://10.0.0.88:8000/test.json").text);
 
 // Load widgets
 Bangle.loadWidgets();
