@@ -1,4 +1,4 @@
-/*const SERVICE = "34defd2c-c8fe-b18e-9a70-591970cba32b";
+const SERVICE = "34defd2c-c8fe-b18e-9a70-591970cba32b";
 const ble_filler = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
 
 //BLE Code
@@ -104,7 +104,7 @@ const sensors = [
   'heartrate',
   'location',
   'barometricpressure'
-];*/
+];
 
 // clear the screen
 g.clear();
@@ -121,7 +121,7 @@ Bangle.http("https://pur3.co.uk/hello.txt").then(data=>{
   draw(data.text);
 });
 
-// draw("Hello Lads");
+draw("Hello Lads");
 
 // Load widgets
 Bangle.loadWidgets();
