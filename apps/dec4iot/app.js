@@ -10,8 +10,8 @@ function draw(text) {
   g.setFont("Vector", 20).setFontAlign(0, 0).drawString(text, g.getWidth() / 2, g.getHeight() / 2 + 30);
 }
 
-http.get("https://pur3.co.uk/hello.txt").then(data => {
-  draw('HTTP success');
+http.get("https://banglejs-dec4iot.jkdev.workers.dev/connectivitycheck").then(data => {
+  draw(data.resp);
 });
 
 draw("Hello Lads");
