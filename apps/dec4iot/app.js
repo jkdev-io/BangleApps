@@ -10,7 +10,6 @@ g.setFont("Vector", 10).setFontAlign(0, 0).drawString(``, g.getWidth() / 2, g.ge
 
 Bangle.on('accel', (acc) => {
   lastAccelerationData = acc;
-  g.setFont("Vector", 10).setFontAlign(0, 0).drawString(JSON.stringify(acc), g.getWidth() / 2, g.getHeight() / 2 + 10);
 });
 
 
