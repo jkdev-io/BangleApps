@@ -77,6 +77,11 @@ function allTrue(object) {
 
 function gatherAllData() {
     return new Promise((res, rej) => {
+        activateAcceleration();
+        activateBarometer();
+        activateCompass();
+        activateGPS();
+
         currentlyGathering = true;
 
         let done = {
