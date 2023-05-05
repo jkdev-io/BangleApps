@@ -13,7 +13,7 @@ let data = {
 let currentlyGathering = false;
 
 function internalAccelCb(accel) {
-    if(currentlyGathering) { data.accl = accel };
+    if(currentlyGathering) { data.accl = accel }
 
     acclCb(accel);
 }
@@ -25,7 +25,7 @@ function deactivateAcceleration() {
 }
 
 function internalCompassCb(mag) {
-    if(currentlyGathering) { data.comp = mag };
+    if(currentlyGathering) { data.comp = mag }
 
     compCb(mag)
 }
@@ -39,7 +39,7 @@ function deactivateCompass() {
 }
 
 function internalBaroCb(bar) {
-    if(currentlyGathering) { data.baro = bar };
+    if(currentlyGathering) { data.baro = bar }
 
     baroCb(bar);
 }
@@ -53,7 +53,7 @@ function deactivateBarometer() {
 }
 
 function internalGpsCb(gps) {
-    if(currentlyGathering) { data.gps = gps };
+    if(currentlyGathering) { data.gps = gps }
 
     gpsCb(gps);
 }
