@@ -5,13 +5,13 @@ const sensors = require('dec4iot_lib_sensor');
 g.clear();
 g.reset().clearRect(Bangle.appRect);
 
-const { writeDefaultConfig } = require('./config');
+const configManager = require('dec4iot_lib_cfgman');
 
 const startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP"};
 
 const config = require('dec4iot_lib_cfgman').readConfig();
 if(config === false) {
-    writeDefaultConfig();
+    configManager.writeDefaultConfig();
 
     Bluetooth.println(JSON.stringify(startSetupIntent));
 } else {
