@@ -1,5 +1,5 @@
-const http = require('dec4iot_lib_http');
-const sensors = require('dec4iot_lib_sensor');
+var http = require('dec4iot_lib_http');
+var sensors = require('dec4iot_lib_sensor');
 
 // try {
 //     setInterval(() => {

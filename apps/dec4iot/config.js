@@ -1,4 +1,4 @@
-const storage = require('Storage');
+var storage = require('Storage');
 
 let defaultConfig = {
     "configured": false,
