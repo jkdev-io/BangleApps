@@ -11,17 +11,3 @@
 // // } catch(e) {
 // //     console.log(e);
 // // }
-
-
-const { writeDefaultConfig } = require('./config');
-
-const startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP"};
-
-const config = require('dec4iot_lib_cfgman').readConfig();
-if(config === false) {
-    writeDefaultConfig();
-
-    GB(startSetupIntent)
-} else {
-
-}
