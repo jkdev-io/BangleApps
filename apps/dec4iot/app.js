@@ -7,7 +7,7 @@ g.reset().clearRect(Bangle.appRect);
 
 var configManager = require('dec4iot_lib_cfgman');
 
-var startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP"};
+var startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]};
 
 const config = require('dec4iot_lib_cfgman').readConfig();
 if(config === false) {
