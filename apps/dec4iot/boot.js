@@ -20,15 +20,17 @@ else {
         let sensor_id = config.sensor_id;
         let data_endpoint = config.sensor_endpoint;
         
-        setInterval(() => {
-            try {
-                sensors.gatherAllData().then(data => {
-                    http.post("https://eo32uzgizbfichl.m.pipedream.net", data, {});
-                });
+        Terminal.println("HIT " + configManager.isValidConfig(config));
 
-            } catch(e) {
-                console.log(e);
-            }
-        }, update_interval * 1000 * 60);
+        // setInterval(() => {
+        //     try {
+        //         sensors.gatherAllData().then(data => {
+        //             http.post("https://eo32uzgizbfichl.m.pipedream.net", data, {});
+        //         });
+
+        //     } catch(e) {
+        //         console.log(e);
+        //     }
+        // }, update_interval * 1000 * 60);
     }
 }
