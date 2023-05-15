@@ -38,10 +38,12 @@ g.reset().clearRect(Bangle.appRect);
 var config = readConfig();
 
 function showSetupMsgs() {
-    g.setFont("6x8:2x3").setFontAlign(0, 0).drawString("Please setup your device!", g.getWidth() /2, g.getHeight() /2 - 30);
-    g.setFont("6x8").setFontAlign(0, 0).drawString("Check your phone!", g.getWidth() /2, g.getHeight() /2 + 10);
-    g.setFont("6x8").setFontAlign(0, 0).drawString("A dialogue should've opened,", g.getWidth() /2, g.getHeight() /2 + 30);
-    g.setFont("6x8").setFontAlign(0, 0).drawString("follow the steps to continue!", g.getWidth() /2, g.getHeight() /2 + 50);
+    let titleHeight = 60;
+
+    g.setFont("Vector:64").setFontAlign(0, 0).drawString("Setup", g.getWidth() /2 + 4, titleHeight);
+    g.setFont("Vector:18").setFontAlign(0, 0).drawString("Check your phone!", g.getWidth() /2, titleHeight + 48);
+    g.setFont("6x8").setFontAlign(0, 0).drawString("Continue using the dialogue", g.getWidth() /2, titleHeight + 73);
+    g.setFont("6x8").setFontAlign(0, 0).drawString("in the dec4IoT Onboarding App", g.getWidth() /2, titleHeight + 83);
 }
 
 if(config === false || !config.configured) {  // No config file found?

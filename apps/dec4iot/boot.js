@@ -34,14 +34,10 @@ function writeDefaultConfig() {
 
 var config = readConfig();
 if(config === false) writeDefaultConfig()
-else if(!config.configured) {
-    // Logic here
-
+else if(config.configured) {
     let update_interval = config.sensor_update_interval;
     let sensor_id = config.sensor_id;
     let data_endpoint = config.sensor_endpoint;
-    
-    Terminal.println("HIT " + config.configured);
 
     // setInterval(() => {
     //     try {
