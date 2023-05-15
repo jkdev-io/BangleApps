@@ -8,7 +8,7 @@ g.reset().clearRect(Bangle.appRect);
 const configManager = require('dec4iot_lib_cfgman');
 const startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]};  //Sending this to Gadgetbridge will start Android App
 
-let config = configManager.readConfig();
+const config = configManager.readConfig();
 
 function showSetupMsgs() {
     g.setFont("6x8").setFontAlign(0, 0).drawString("Please setup your device!", g.getWidth() /2, g.getHeight() /2 - 30);
