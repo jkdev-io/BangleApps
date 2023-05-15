@@ -24,11 +24,6 @@ function readConfig() {
     return storage.readJSON("dec4iot.settings.json");
 }
 
-function isConfigured(configJson) {
-    if(configJson.configured) return true;
-    else return false;
-}
-
 function writeConfig(sensor_id, data_endpoint, update_interval) {
     storage.writeJSON("dec4iot.settings.json", {
         "configured": true,
@@ -46,4 +41,4 @@ function writeDefaultConfig() {
     storage.writeJSON("dec4iot.settings.json", defaultConfig);
 }
 
-module.exports = { hasConfig, isConfigured, isNoLongerDefault, isValidConfig, readConfig, writeConfig, writeDefaultConfig }
+module.exports = { hasConfig, readConfig, writeConfig, writeDefaultConfig }

@@ -10,27 +10,23 @@ var configManager = require('dec4iot_lib_cfgman');
 
 const config = configManager.readConfig();
 if(config === false) configManager.writeDefaultConfig()
-else {
-    let validConfig = configManager.isConfigured(config);
+else if(!validConfig) {
+    // Logic here
 
-    if(!validConfig) {
-        // Logic here
+    let update_interval = config.sensor_update_interval;
+    let sensor_id = config.sensor_id;
+    let data_endpoint = config.sensor_endpoint;
+    
+    Terminal.println("HIT " + config.configured);
 
-        let update_interval = config.sensor_update_interval;
-        let sensor_id = config.sensor_id;
-        let data_endpoint = config.sensor_endpoint;
-        
-        Terminal.println("HIT " + configManager.isConfigured(config));
+    // setInterval(() => {
+    //     try {
+    //         sensors.gatherAllData().then(data => {
+    //             http.post("https://eo32uzgizbfichl.m.pipedream.net", data, {});
+    //         });
 
-        // setInterval(() => {
-        //     try {
-        //         sensors.gatherAllData().then(data => {
-        //             http.post("https://eo32uzgizbfichl.m.pipedream.net", data, {});
-        //         });
-
-        //     } catch(e) {
-        //         console.log(e);
-        //     }
-        // }, update_interval * 1000 * 60);
-    }
+    //     } catch(e) {
+    //         console.log(e);
+    //     }
+    // }, update_interval * 1000 * 60);
 }

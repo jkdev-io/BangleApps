@@ -23,7 +23,7 @@ if(config === false) {  // No config file found?
     showSetupMsgs();  // Tell user
 } else {
 
-    if(!configManager.isConfigured(config)) {  // Config invalid; Start setup!
+    if(!config.configured) {  // Config invalid; Start setup!
         Bluetooth.println(JSON.stringify(startSetupIntent));
         showSetupMsgs();  // Tell user
 
