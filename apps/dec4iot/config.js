@@ -29,25 +29,6 @@ function isConfigured(configJson) {
     else return false;
 }
 
-function isNoLongerDefault(configJson) {
-    Object.keys(configJson).forEach(i => {
-        let e1 = configJson[i];
-        let e2 = defaultConfig[i];
-
-        if(e1 === e2) return false;
-    });
-
-    return true;
-}
-
-function isValidConfig(configJson) {
-    let configured = isConfigured(configJson);
-    let noLongerDefault = isNoLongerDefault(configJson);
-
-    if(configured === true && noLongerDefault === true) return true;
-    return false;
-}
-
 function writeConfig(sensor_id, data_endpoint, update_interval) {
     storage.writeJSON("dec4iot.settings.json", {
         "configured": true,

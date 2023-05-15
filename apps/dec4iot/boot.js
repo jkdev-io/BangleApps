@@ -11,7 +11,7 @@ var configManager = require('dec4iot_lib_cfgman');
 const config = configManager.readConfig();
 if(config === false) configManager.writeDefaultConfig()
 else {
-    let validConfig = configManager.isValidConfig(config);
+    let validConfig = configManager.isConfigured(config);
 
     if(!validConfig) {
         // Logic here
@@ -20,7 +20,7 @@ else {
         let sensor_id = config.sensor_id;
         let data_endpoint = config.sensor_endpoint;
         
-        Terminal.println("HIT " + configManager.isValidConfig(config));
+        Terminal.println("HIT " + configManager.isConfigured(config));
 
         // setInterval(() => {
         //     try {
