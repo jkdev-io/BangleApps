@@ -1,14 +1,41 @@
 var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
 
+// Config Functions ===
+function readConfig() {
+    var reg = new RegExp("dec4iot.settings.json");
+    var res = require('Storage').list(reg);
+
+    var hasCfg = false;
+    if(res.length === 1) hasCfg = true
+    if(!hasCfg) return false;
+
+    return require('Storage').readJSON("dec4iot.settings.json");
+}
+
+function writeDefaultConfig() {
+    if(readConfig().configured) return false;
+
+    require('Storage').writeJSON("dec4iot.settings.json", {
+        "configured": false,
+        
+        "sensor_id": -1,
+        "sensor_endpoint": "",
+    
+        "sensor_update_interval": -1
+    });
+}
+// Config Functions ===
+
+// Android App Interactions ===
+var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  //Sending this to Gadgetbridge will start Android App
+// Android App Interactions ===
+
 // clear the screen
 g.clear();
 g.reset().clearRect(Bangle.appRect);
 
-var configManager = require('dec4iot_lib_cfgman');
-var config = configManager.readConfig();
-
-var startSetupIntent = {t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]};  //Sending this to Gadgetbridge will start Android App
+var config = readConfig();
 
 function showSetupMsgs() {
     g.setFont("6x8").setFontAlign(0, 0).drawString("Please setup your device!", g.getWidth() /2, g.getHeight() /2 - 30);
@@ -17,21 +44,11 @@ function showSetupMsgs() {
     g.setFont("4x8").setFontAlign(0, 0).drawString("follow the steps to continue!", g.getWidth() /2, g.getHeight() /2 + 50);
 }
 
-if(config === false) {  // No config file found?
-    configManager.writeDefaultConfig();  // Write defaults
+if(config === false || !config.configured) {  // No config file found?
+    writeDefaultConfig();  // Write defaults
     Bluetooth.println(JSON.stringify(startSetupIntent));  // Start setup!
     showSetupMsgs();  // Tell user
-} else {
-
-    Terminal.println("HIT " + config.configured);
-
-    if(!config.configured) {  // Config invalid; Start setup!
-        Bluetooth.println(JSON.stringify(startSetupIntent));
-        showSetupMsgs();  // Tell user
-
-    } else logic(config)  // Config valid; Start the logic!
-    
-}
+} else logic(config)
 
 
 // Logic

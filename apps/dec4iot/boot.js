@@ -1,15 +1,39 @@
 var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
 
-var configManager = require('dec4iot_lib_cfgman');
-
 // TODO: This needs to be overhauled to support Senml!
 // TODO: This needs to be overhauled to support Senml!
 // TODO: This needs to be overhauled to support Senml!
 // TODO: This needs to be overhauled to support Senml!
 
-const config = configManager.readConfig();
-if(config === false) configManager.writeDefaultConfig()
+// Config Functions ===
+function readConfig() {
+    var reg = new RegExp("dec4iot.settings.json");
+    var res = require('Storage').list(reg);
+
+    var hasCfg = false;
+    if(res.length === 1) hasCfg = true
+    if(!hasCfg) return false;
+
+    return require('Storage').readJSON("dec4iot.settings.json");
+}
+
+function writeDefaultConfig() {
+    if(readConfig().configured) return false;
+
+    require('Storage').writeJSON("dec4iot.settings.json", {
+        "configured": false,
+        
+        "sensor_id": -1,
+        "sensor_endpoint": "",
+    
+        "sensor_update_interval": -1
+    });
+}
+// Config Functions ===
+
+var config = readConfig();
+if(config === false) writeDefaultConfig()
 else if(!config.configured) {
     // Logic here
 
