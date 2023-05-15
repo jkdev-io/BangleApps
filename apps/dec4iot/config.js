@@ -1,6 +1,4 @@
-var storage = require('Storage');
-
-let defaultConfig = {
+var defaultConfig = {
     "configured": false,
     
     "sensor_id": -1,
@@ -10,22 +8,22 @@ let defaultConfig = {
 }
 
 function hasConfig() {
-    let reg = new RegExp("dec4iot.settings.json");
-    let res = storage.list(reg);
+    var reg = new RegExp("dec4iot.settings.json");
+    var res = require('Storage').list(reg);
 
     if(res.length === 1) return true;
     else return false;
 }
 
 function readConfig() {
-    let hasCfg = hasConfig();
+    var hasCfg = hasConfig();
     if(!hasCfg) return false;
 
-    return storage.readJSON("dec4iot.settings.json");
+    return require('Storage').readJSON("dec4iot.settings.json");
 }
 
 function writeConfig(sensor_id, data_endpoint, update_interval) {
-    storage.writeJSON("dec4iot.settings.json", {
+    require('Storage').writeJSON("dec4iot.settings.json", {
         "configured": true,
     
         "sensor_id": sensor_id,
@@ -36,9 +34,9 @@ function writeConfig(sensor_id, data_endpoint, update_interval) {
 }
 
 function writeDefaultConfig() {
-    if(isValidConfig(readConfig())) return false;
+    if(readConfig().configured) return false;
 
-    storage.writeJSON("dec4iot.settings.json", defaultConfig);
+    require('Storage').writeJSON("dec4iot.settings.json", defaultConfig);
 }
 
 module.exports = { hasConfig, readConfig, writeConfig, writeDefaultConfig }
