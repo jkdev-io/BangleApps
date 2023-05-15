@@ -2,7 +2,7 @@
   "id": "dec4iot",
   "name": "dec4IoT Companion",
   "shortName": "dec4IoT",
-  "version": "0.34",
+  "version": "0.35",
   "description": "Bangle.Js2 app for the dec4IoT project",
   "icon": "app.png",
   "tags": "",
