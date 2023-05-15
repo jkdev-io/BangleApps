@@ -38,15 +38,15 @@ g.reset().clearRect(Bangle.appRect);
 var config = readConfig();
 
 function showSetupMsgs() {
-    g.setFont("6x8").setFontAlign(0, 0).drawString("Please setup your device!", g.getWidth() /2, g.getHeight() /2 - 30);
-    g.setFont("4x8").setFontAlign(0, 0).drawString("Check your phone!", g.getWidth() /2, g.getHeight() /2 + 10);
-    g.setFont("4x8").setFontAlign(0, 0).drawString("A dialogue should've opened,", g.getWidth() /2, g.getHeight() /2 + 30);
-    g.setFont("4x8").setFontAlign(0, 0).drawString("follow the steps to continue!", g.getWidth() /2, g.getHeight() /2 + 50);
+    g.setFont("6x8:2x3").setFontAlign(0, 0).drawString("Please setup your device!", g.getWidth() /2, g.getHeight() /2 - 30);
+    g.setFont("6x8").setFontAlign(0, 0).drawString("Check your phone!", g.getWidth() /2, g.getHeight() /2 + 10);
+    g.setFont("6x8").setFontAlign(0, 0).drawString("A dialogue should've opened,", g.getWidth() /2, g.getHeight() /2 + 30);
+    g.setFont("6x8").setFontAlign(0, 0).drawString("follow the steps to continue!", g.getWidth() /2, g.getHeight() /2 + 50);
 }
 
 if(config === false || !config.configured) {  // No config file found?
     writeDefaultConfig();  // Write defaults
-    Bluetooth.println(JSON.stringify(startSetupIntent));  // Start setup!
+    Bluetooth.println(startSetupIntent);  // Start setup!
     showSetupMsgs();  // Tell user
 } else logic(config)
 
