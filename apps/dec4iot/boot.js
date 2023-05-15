@@ -10,7 +10,7 @@ var configManager = require('dec4iot_lib_cfgman');
 
 const config = configManager.readConfig();
 if(config === false) configManager.writeDefaultConfig()
-else if(!validConfig) {
+else if(!config.configured) {
     // Logic here
 
     let update_interval = config.sensor_update_interval;
