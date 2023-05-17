@@ -76,5 +76,3 @@ if(config === false || !config.configured) {  // No config file found?
 // Load widgets
 Bangle.loadWidgets();
 Bangle.drawWidgets();
-
-module.exports = { startLogic }

@@ -1,6 +1,5 @@
 var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
-sensors.activateGPS();
 
 // TODO: This needs to be overhauled to support Senml!
 // TODO: This needs to be overhauled to support Senml!
