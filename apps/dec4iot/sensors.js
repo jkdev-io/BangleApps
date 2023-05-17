@@ -1,13 +1,33 @@
+/**
+    dec4IoT on Bangle.js
+    Copyright (C) 2023 Jakob Kampichler / jkdev
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/> or <https://choosealicense.com/licenses/gpl-3.0/>.
+**/
+
 let acclCb = (a) => {};
 let compCb = (a) => {};
 let baroCb = (a) => {};
 let gpsCb = (a) => {};
+let hrmCb = (a) => {};
 
 let data = {
     accl: {},
     comp: {},
     baro: {},
-    gps: {}
+    gps: {},
+    hrm: {}
 }
 
 let currentlyGathering = false;
@@ -66,6 +86,20 @@ function deactivateGPS() {
     Bangle.on('GPS', (x) => {});
 }
 
+function internalHrmCb(hrm) {
+    if(currentlyGathering) { data.hrm = hrm }
+
+    hrmCb(hrm);
+}
+function activateHRM() {
+    Bangle.setHRMPower(true, "dec4iot");
+    Bangle.on('HRM', internalHrmCb);
+}
+function deactivateHRM() {
+    Bangle.setHRMPower(false, "dec4iot");
+    Bangle.on('HRM', (x) => {})
+}
+
 function allTrue(object) {
     for (let key in object) {
         if (!object[key]) {
@@ -81,6 +115,7 @@ function gatherAllData() {
         activateBarometer();
         activateCompass();
         activateGPS();
+        activateHRM();
 
         currentlyGathering = true;
 
@@ -109,6 +144,7 @@ function gatherAllData() {
         deactivateBarometer();
         deactivateCompass();
         deactivateGPS();
+        deactivateHRM();
     });
 }
 
@@ -117,16 +153,19 @@ module.exports = {
     compCb,
     baroCb,
     gpsCb,
+    hrmCb,
 
     activateAcceleration,
     activateBarometer,
     activateCompass,
     activateGPS,
+    activateHRM,
 
     deactivateAcceleration,
     deactivateBarometer,
     deactivateCompass,
     deactivateGPS,
+    deactivateHRM,
 
     gatherAllData
 }
