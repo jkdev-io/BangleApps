@@ -54,10 +54,11 @@ function logic(config) {
     // setTimeout(sensors.activateGPS, (update_interval - 10) * 1000 * 60);
 }
 
-var config = readConfig();
-if(config === false) writeDefaultConfig()
-else if(config.configured) {
-    logic(config);
-}
-
-module.exports = {logic};
+var confCheck = setInterval(() => {
+    var config = readConfig();
+    if(config === false) writeDefaultConfig()
+    else if(config.configured) {
+        clearInterval(confCheck);
+        logic(config);
+    }
+}, 60 * 1000 * 60)

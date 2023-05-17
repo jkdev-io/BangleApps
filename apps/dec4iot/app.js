@@ -34,7 +34,6 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
     g.clear();
     g.reset().clearRect(Bangle.appRect)
     logic(readConfig())
-    require('dec4iot.boot.js').logic(config)
 }
 // Android App Interactions ===
 
@@ -54,18 +53,7 @@ function panicBtnPressed(config) {
 }
 
 function logic(config) {
-    let layout = new Layout({
-        type: "v", c: [
-            {type: "txt", font: "6x8:2", label: "Panic Button", id: "label"},
-            {type: "txt", font: "6x8", label: "Press the physical button on your Bangle.Js to call for help", id: "explanation"}
-        ],
-    }, {
-        btns: [
-            {label: "PANIC", cbl: () => panicBtnPressed(config)}
-        ]
-    });
-
-    layout.render();
+    
 }
 
 // Setup ===
