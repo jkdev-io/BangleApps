@@ -58,22 +58,22 @@ function internalGpsCb(gps) {
     gpsCb(gps);
 }
 function activateGPS() {
-    Bangle.setGPSPower(1);
+    Bangle.setGPSPower(1, "dec4iot");
     Bangle.on('GPS', internalGpsCb);
 }
 function deactivateGPS() {
-    Bangle.setGPSPower(0);
+    Bangle.setGPSPower(0, "dec4iot");
     Bangle.on('GPS', (x) => {});
 }
 
 function allTrue(object) {
     for (let key in object) {
-      if (!object[key]) {
-        return false;
-      }
+        if (!object[key]) {
+            return false;
+        }
     }
     return true;
-  }
+}
 
 function gatherAllData() {
     return new Promise((res, rej) => {
@@ -103,8 +103,13 @@ function gatherAllData() {
                 res(data);
             }
 
-        }, 500)
-    })
+        }, 500);
+
+        deactivateAcceleration();
+        deactivateBarometer();
+        deactivateCompass();
+        deactivateGPS();
+    });
 }
 
 module.exports = {

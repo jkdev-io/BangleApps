@@ -1,5 +1,6 @@
 var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
+var Layout = require('Layout');
 
 // Config Functions ===
 function readConfig() {
@@ -29,6 +30,12 @@ function writeDefaultConfig() {
 
 // Android App Interactions ===
 var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  //Sending this to Gadgetbridge will start Android App
+function startLogic() {  // run by onboarding app; start logic so no app restart is needed
+    g.clear();
+    g.reset().clearRect(Bangle.appRect)
+    logic(readConfig())
+    require('dec4iot.boot.js').logic(config)
+}
 // Android App Interactions ===
 
 // clear the screen
@@ -37,6 +44,31 @@ g.reset().clearRect(Bangle.appRect);
 
 var config = readConfig();
 
+function panicBtnPressed(config) {
+    let sensor_id = config.sensor_id;
+    let data_endpoint = config.sensor_endpoint;
+
+    Bangle.buzz(1000, 1).then(
+    () => Bangle.buzz(1000, 1)).then(
+    () => Bangle.buzz(1000, 1));
+}
+
+function logic(config) {
+    let layout = new Layout({
+        type: "v", c: [
+            {type: "txt", font: "6x8:2", label: "Panic Button", id: "label"},
+            {type: "txt", font: "6x8", label: "Press the physical button on your Bangle.Js to call for help", id: "explanation"}
+        ],
+    }, {
+        btns: [
+            {label: "PANIC", cbl: () => panicBtnPressed(config)}
+        ]
+    });
+
+    layout.render();
+}
+
+// Setup ===
 function showSetupMsgs() {
     let titleHeight = 60;
 
@@ -51,13 +83,10 @@ if(config === false || !config.configured) {  // No config file found?
     Bluetooth.println(startSetupIntent);  // Start setup!
     showSetupMsgs();  // Tell user
 } else logic(config)
-
-
-// Logic
-function logic(config) {
-    // Future big brain stuff
-}
+// Setup ===
 
 // Load widgets
 Bangle.loadWidgets();
 Bangle.drawWidgets();
+
+module.exports = { startLogic }

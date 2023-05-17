@@ -1,5 +1,6 @@
 var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
+sensors.activateGPS();
 
 // TODO: This needs to be overhauled to support Senml!
 // TODO: This needs to be overhauled to support Senml!
@@ -32,9 +33,7 @@ function writeDefaultConfig() {
 }
 // Config Functions ===
 
-var config = readConfig();
-if(config === false) writeDefaultConfig()
-else if(config.configured) {
+function logic(config) {
     let update_interval = config.sensor_update_interval;
     let sensor_id = config.sensor_id;
     let data_endpoint = config.sensor_endpoint;
@@ -48,5 +47,17 @@ else if(config.configured) {
     //     } catch(e) {
     //         console.log(e);
     //     }
+
+    //     setTimeout(sensors.activateGPS, (update_interval - 10) * 1000 * 60);  // Activate GPS 10 minutes before we send an update the next time; The most likely for Bangle.Js to pick up satelites!
     // }, update_interval * 1000 * 60);
+
+    // setTimeout(sensors.activateGPS, (update_interval - 10) * 1000 * 60);
 }
+
+var config = readConfig();
+if(config === false) writeDefaultConfig()
+else if(config.configured) {
+    logic(config);
+}
+
+module.exports = {logic};
