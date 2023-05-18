@@ -79,8 +79,8 @@ function logic(config) {
             {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
             {type: "btn", pad: 4, label: "SOS", cb: () => {
                 E.showPrompt("Please confirm:", {"title": "Emergency", "buttons": {"SOS": 1, "Cancel": 2}}).then(i => {
-                    if(i === 1) {EMERGENCY(config.sensor_id, config.sensor_endpoint); return;}
-                    Bangle.showClock();
+                    if(i === 1) EMERGENCY(config.sensor_id, config.sensor_endpoint)
+                    if(i === 2) Bangle.showClock()
                 });
             }}
     ]}, {
