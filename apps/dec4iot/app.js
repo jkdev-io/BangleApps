@@ -20,7 +20,12 @@ var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
 var Layout = require('Layout');
 
-// Config Functions ===
+var big_img = {
+  width : 80, height : 80, bpp : 3,
+  transparent : 0,
+  buffer : require("heatshrink").decompress(atob("AAcJkmSpICQoAcGDSQCEDgkEDq+ADgUBDSoCDDsAaXAQVIDr0CDrVJgESDvMgDvYaZARn/AAXJDrn5DvQAFEaYdJ//8Drn/+QdcXiIdMPSAdM/4dd8gd6ah+fDxryRAQknDrhEGDq+Sv4dD+Qd1p4d//wdXpIdOn5KNDqQOKDv4d/Dv4d/DvUnBwXyDrACNp4dhJRQdrv4d5yYcDDq7dDAAQXOz4VFAA4dODhv8DvXkDritPDhn5DrnJDrfyDRodNWB4dMOiAdGC6YdnVSACdiQdbkAd/ATEAgQdcgAdapAdfgIdZDgIdegEEDq+ADocAdi4cEAAMJDqdADIYA=="))
+};
+//#region  Config Functions
 function readConfig() {
     var reg = new RegExp("dec4iot.settings.json");
     var res = require('Storage').list(reg);
@@ -46,29 +51,78 @@ function writeDefaultConfig() {
         "sensor_update_interval": -1
     });
 }
-// Config Functions ===
+//#endregion  Config Functions
 
-// Android App Interactions ===
+//#region  Android
 var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  // Sending this to Gadgetbridge will start Onboarding App
 function startLogic() {  // run by onboarding app; start logic so no app restart is needed
     g.clear();
     g.reset().clearRect(Bangle.appRect)
     logic(readConfig())
 }
-// Android App Interactions ===
+//#endregion Android
+
+//#region  Logic
+function layout(cb) {
+    var layout_confirm = new Layout({
+        type: "v", c: [
+            {type: "txt", font: "Vector:40", label: "Confirm", id: "confirm"},
+            {type: "btn", pad: 4, label: "Emergency", cb: () => { cb(); }}
+    ]}, {
+        btns: [
+            {label: "SOS", cb: () => { cb(); }}
+        ]
+    });
+
+    var layout_start = new Layout({
+        type: "v", c: [
+            {type: "img", pad: 16, src: big_img},
+            {type: "txt", font: "Vector:14", label: "Press button to call", id: "press_button_to_call"},
+            {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
+            {type: "btn", pad: 4, label: "SOS", cb: () => { 
+                g.clear();
+                g.reset().clearRect(Bangle.appRect);
+                layout_confirm.render();
+                Bangle.loadWidgets();
+                BangledrawWidgets();
+            }}
+    ]}, {
+        btns: [
+            {label: "SOS", cbl: () => { cb(); }, cb: () => { 
+                g.clear();
+                g.reset().clearRect(Bangle.appRect);
+                layout_confirm.render();
+                Bangle.loadWidgets();
+                Bangle.drawWidgets();
+            }}
+        ]
+    });
+
+    return layout_start;
+}
+
+function EMERGENCY(sensor_id, sensor_endpoint) {
+    Bangle.buzz(1000, 1);
+}
 
 function logic(config) {
     // clear the screen
     g.clear();
     g.reset().clearRect(Bangle.appRect);
 
+    layout(() => {
+        EMERGENCY(config.sensor_id, config.sensor_endpoint);
+    }).render();
 
+    
     // Load widgets
     Bangle.loadWidgets();
     Bangle.drawWidgets();
 }
 
-// Setup ===
+//#endregion  Logic
+
+//#region  Setup
 function showSetupMsgs() {
     let titleHeight = 60;
 
@@ -88,4 +142,4 @@ if(config === false || !config.configured) {  // No config file found?
     Bluetooth.println(startSetupIntent);  // Start setup!
     showSetupMsgs();
 } else logic(config)
-// Setup ===
+//#endregion  Setup
