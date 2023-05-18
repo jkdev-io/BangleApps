@@ -67,6 +67,7 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 function EMERGENCY() {
     Bangle.buzz(1000, 1);
     sensors.gatherAllData().then(data => {
+        Terminal.println(data)
         let sendMe = {
             "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint},
             "data": data
@@ -76,8 +77,6 @@ function EMERGENCY() {
 
         Bluetooth.println(dataIntent);
     });
-
-    Bangle.showClock();
 }
 
 function logic(config) {
