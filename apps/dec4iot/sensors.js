@@ -19,14 +19,12 @@
 let acclCb = (a) => {};
 let compCb = (a) => {};
 let baroCb = (a) => {};
-let gpsCb = (a) => {};
 let hrmCb = (a) => {};
 
 let data = {
     accl: {},
     comp: {},
     baro: {},
-    gps: {},
     hrm: {}
 }
 
@@ -72,20 +70,6 @@ function deactivateBarometer() {
     Bangle.on('pressure', (x) => {});
 }
 
-function internalGpsCb(gps) {
-    if(currentlyGathering) { data.gps = gps }
-
-    gpsCb(gps);
-}
-function activateGPS() {
-    Bangle.setGPSPower(1, "dec4iot");
-    Bangle.on('GPS', internalGpsCb);
-}
-function deactivateGPS() {
-    Bangle.setGPSPower(0, "dec4iot");
-    Bangle.on('GPS', (x) => {});
-}
-
 function internalHrmCb(hrm) {
     if(currentlyGathering) { data.hrm = hrm }
 
@@ -114,7 +98,6 @@ function gatherAllData() {
         activateAcceleration();
         activateBarometer();
         activateCompass();
-        activateGPS();
         activateHRM();
 
         currentlyGathering = true;
@@ -123,7 +106,7 @@ function gatherAllData() {
             accl: false,
             comp: false,
             baro: false,
-            gps: false
+            hrm: false
         }
 
         let intervalId = setInterval(() => {
@@ -143,7 +126,6 @@ function gatherAllData() {
         deactivateAcceleration();
         deactivateBarometer();
         deactivateCompass();
-        deactivateGPS();
         deactivateHRM();
     });
 }
@@ -152,19 +134,16 @@ module.exports = {
     acclCb,
     compCb,
     baroCb,
-    gpsCb,
     hrmCb,
 
     activateAcceleration,
     activateBarometer,
     activateCompass,
-    activateGPS,
     activateHRM,
 
     deactivateAcceleration,
     deactivateBarometer,
     deactivateCompass,
-    deactivateGPS,
     deactivateHRM,
 
     gatherAllData

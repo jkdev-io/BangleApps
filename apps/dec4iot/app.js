@@ -77,10 +77,10 @@ function EMERGENCY(sensor_id, sensor_endpoint) {
             "info": alwaysIncluded,
             "data": data
         };
-        console.log(sendMe);
-        //let dataIntent = sendDataIntent(sendMe);
+        
+        let dataIntent = sendDataIntent(sendMe);
 
-        //Bluetooth.println(dataIntent);
+        Bluetooth.println(dataIntent);
     });
 
     Bangle.showClock();
@@ -90,6 +90,11 @@ function logic(config) {
     // clear the screen
     g.clear();
     g.reset().clearRect(Bangle.appRect);
+
+    sensors.activateAcceleration();
+    sensors.activateBarometer();
+    sensors.activateCompass();
+    sensors.activateHRM();
 
     var layout_start = new Layout({
         type: "v", c: [
