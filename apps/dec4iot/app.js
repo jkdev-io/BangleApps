@@ -63,44 +63,6 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 //#endregion Android
 
 //#region  Logic
-function layout(cb) {
-    var layout_confirm = new Layout({
-        type: "v", c: [
-            {type: "txt", font: "Vector:40", label: "Confirm", id: "confirm"},
-            {type: "btn", pad: 4, label: "Emergency", cb: () => { cb(); }}
-    ]}, {
-        btns: [
-            {label: "SOS", cb: () => { cb(); }}
-        ]
-    });
-
-    var layout_start = new Layout({
-        type: "v", c: [
-            {type: "img", pad: 16, src: big_img},
-            {type: "txt", font: "Vector:14", label: "Press button to call", id: "press_button_to_call"},
-            {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
-            {type: "btn", pad: 4, label: "SOS", cb: () => { 
-                g.clear();
-                g.reset().clearRect(Bangle.appRect);
-                layout_confirm.render();
-                Bangle.loadWidgets();
-                BangledrawWidgets();
-            }}
-    ]}, {
-        btns: [
-            {label: "SOS", cbl: () => { cb(); }, cb: () => { 
-                g.clear();
-                g.reset().clearRect(Bangle.appRect);
-                layout_confirm.render();
-                Bangle.loadWidgets();
-                Bangle.drawWidgets();
-            }}
-        ]
-    });
-
-    return layout_start;
-}
-
 function EMERGENCY(sensor_id, sensor_endpoint) {
     Bangle.buzz(1000, 1);
 }
@@ -110,9 +72,24 @@ function logic(config) {
     g.clear();
     g.reset().clearRect(Bangle.appRect);
 
-    layout(() => {
-        EMERGENCY(config.sensor_id, config.sensor_endpoint);
-    }).render();
+    var layout_start = new Layout({
+        type: "v", c: [
+            {type: "img", pad: 12, src: big_img},
+            {type: "txt", font: "Vector:14", label: "Press button to call", id: "press_button_to_call"},
+            {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
+            {type: "btn", pad: 4, label: "SOS", cb: () => {
+                E.showPrompt("Please confirm:", {"title": "Emergency", "buttons": {"SOS": 1, "Cancel": 2}}).then(i => {
+                    if(i === 1) {EMERGENCY(config.sensor_id, config.sensor_endpoint);}
+                    Bangle.showLauncher();
+                });
+            }}
+    ]}, {
+        btns: [
+            {label: "SOS", cb: () => { EMERGENCY(config.sensor_id, config.sensor_endpoint) }}
+        ]
+    });
+
+    layout_start.render();
 
     
     // Load widgets
