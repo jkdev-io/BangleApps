@@ -55,6 +55,7 @@ function writeDefaultConfig() {
 
 //#region  Android
 var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  // Sending this to Gadgetbridge will start Onboarding App
+var sendDataIntent = (data) => { return JSON.stringify({t: "intent", target: "broadcastreciever", action: "me.byjkdev.dec4iot.intents.banglejs.SEND_DATA", "data": data}); } // Sending this to Gadgetbridge will tell Onboarding App to send data
 function startLogic() {  // run by onboarding app; start logic so no app restart is needed
     g.clear();
     g.reset().clearRect(Bangle.appRect)
@@ -65,6 +66,24 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 //#region  Logic
 function EMERGENCY(sensor_id, sensor_endpoint) {
     Bangle.buzz(1000, 1);
+
+    let alwaysIncluded = {
+        "sensor_id": sensor_id,
+        "sensor_endpoint": sensor_endpoint
+    }
+
+    sensors.gatherAllData().then(data => {
+        let sendMe = {
+            "info": alwaysIncluded,
+            "data": data
+        };
+        console.log(sendMe);
+        //let dataIntent = sendDataIntent(sendMe);
+
+        //Bluetooth.println(dataIntent);
+    });
+
+    Bangle.showClock();
 }
 
 function logic(config) {
@@ -79,7 +98,7 @@ function logic(config) {
             {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
             {type: "btn", pad: 4, label: "SOS", cb: () => {
                 E.showPrompt("Please confirm:", {"title": "Emergency", "buttons": {"SOS": 1, "Cancel": 2}}).then(i => {
-                    if(i === 1) EMERGENCY(config.sensor_id, config.sensor_endpoint)
+                    if(i === 1) EMERGENCY(config.sensor_id, config.sensor_endpoint);
                     if(i === 2) Bangle.showClock()
                 });
             }}
