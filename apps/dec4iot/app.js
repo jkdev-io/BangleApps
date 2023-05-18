@@ -64,17 +64,11 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 //#endregion Android
 
 //#region  Logic
-function EMERGENCY(sensor_id, sensor_endpoint) {
+function EMERGENCY() {
     Bangle.buzz(1000, 1);
-
-    let alwaysIncluded = {
-        "sensor_id": sensor_id,
-        "sensor_endpoint": sensor_endpoint
-    }
-
     sensors.gatherAllData().then(data => {
         let sendMe = {
-            "info": alwaysIncluded,
+            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint},
             "data": data
         };
         
@@ -103,13 +97,13 @@ function logic(config) {
             {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
             {type: "btn", pad: 4, label: "SOS", cb: () => {
                 E.showPrompt("Please confirm:", {"title": "Emergency", "buttons": {"SOS": 1, "Cancel": 2}}).then(i => {
-                    if(i === 1) EMERGENCY(config.sensor_id, config.sensor_endpoint);
+                    if(i === 1) EMERGENCY();
                     if(i === 2) Bangle.showClock()
                 });
             }}
     ]}, {
         btns: [
-            {label: "SOS", cb: () => { EMERGENCY(config.sensor_id, config.sensor_endpoint) }}
+            {label: "SOS", cb: () => { EMERGENCY() }}
         ]
     });
 
