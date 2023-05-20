@@ -103,13 +103,15 @@ function gatherAllData() {
         data.comp = Bangle.getCompass()
         done.comp = true;
 
-        data.health = Bangle.getHealthStatus();
-        done.health = true;
-
         Bangle.getPressure().then(pressure => {
             data.baro = pressure;
             done.baro = true;
         });
+
+        Bangle.on('HRM', (_) => {
+            data.health = Bangle.getHealthStatus();
+            done.health = true;
+        })
 
         let intervalId = setInterval(() => {
             if(allTrue(done)) {
