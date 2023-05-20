@@ -87,21 +87,26 @@ function gatherAllData() {
             accl: false,
             comp: false,
             baro: false,
-            health: false
+            health: false,
+            battery: false
         };
         
         let data = {
             accl: {},
             comp: {},
             baro: {},
-            health: {}
+            health: {},
+            battery: 0
         };
 
         data.accl = Bangle.getAccel();
         done.accl = true;
 
-        data.comp = Bangle.getCompass()
+        data.comp = Bangle.getCompass();
         done.comp = true;
+
+        data.battery = E.getBattery();
+        done.battery = true;
 
         Bangle.getPressure().then(pressure => {
             data.baro = pressure;
