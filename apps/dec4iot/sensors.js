@@ -21,56 +21,34 @@ let compCb = (a) => {};
 let baroCb = (a) => {};
 let hrmCb = (a) => {};
 
-let currentlyGathering = false;
-
-function internalAccelCb(accel) {
-    if(currentlyGathering) { data.accl = accel }
-
-    acclCb(accel);
-}
 function activateAcceleration() {
-    Bangle.on('accel', internalAccelCb);
+    Bangle.on('accel', acclCb);
 }
 function deactivateAcceleration() {
     Bangle.on('accel', (x) => {})
 }
 
-function internalCompassCb(mag) {
-    if(currentlyGathering) { data.comp = mag }
-
-    compCb(mag)
-}
 function activateCompass() {
     Bangle.setCompassPower(1);
-    Bangle.on('mag', internalCompassCb);
+    Bangle.on('mag', compCb);
 }
 function deactivateCompass() {
     Bangle.setCompassPower(0);
     Bangle.on('mag', (x) => {});
 }
 
-function internalBaroCb(bar) {
-    if(currentlyGathering) { data.baro = bar }
-
-    baroCb(bar);
-}
 function activateBarometer() {
     Bangle.setBarometerPower(true);
-    Bangle.on('pressure', internalBaroCb);
+    Bangle.on('pressure', baroCb);
 }
 function deactivateBarometer() {
     Bangle.setBarometerPower(false);
     Bangle.on('pressure', (x) => {});
 }
 
-function internalHrmCb(hrm) {
-    if(currentlyGathering) { data.hrm = hrm }
-
-    hrmCb(hrm);
-}
 function activateHRM() {
     Bangle.setHRMPower(true, "dec4iot");
-    Bangle.on('HRM', internalHrmCb);
+    Bangle.on('HRM', hrmCb);
 }
 function deactivateHRM() {
     Bangle.setHRMPower(false, "dec4iot");
