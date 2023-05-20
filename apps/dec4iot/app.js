@@ -20,6 +20,11 @@ var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
 var Layout = require('Layout');
 
+
+// clear the screen
+g.clear();
+g.reset().clearRect(Bangle.appRect);
+
 var big_img = {
   width : 80, height : 80, bpp : 3,
   transparent : 0,
@@ -73,17 +78,13 @@ function EMERGENCY() {
             "data": data
         };
         
-        let dataIntent = sendDataIntent(sendMe);
+        let dataIntent = sendDataIntent(JSON.stringify(sendMe));
 
         Bluetooth.println(dataIntent);
     });
 }
 
 function logic(config) {
-    // clear the screen
-    g.clear();
-    g.reset().clearRect(Bangle.appRect);
-
     sensors.activateAcceleration();
     sensors.activateBarometer();
     sensors.activateCompass();
