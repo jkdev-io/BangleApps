@@ -72,7 +72,7 @@ function EMERGENCY() {
     sensors.gatherAllData().then(data => {
         Terminal.println(data)
         let sendMe = {
-            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint},
+            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint, "mac_address": NRF.getAddress()},
             "data": data
         };
         
