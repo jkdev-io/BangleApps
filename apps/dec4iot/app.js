@@ -68,17 +68,16 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 
 //#region  Logic
 function EMERGENCY() {
-    Bangle.buzz(1000, 1);
     sensors.gatherAllData().then(data => {
-        Terminal.println(data)
         let sendMe = {
-            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint, "mac_address": NRF.getAddress()},
+            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint, "mac_address": NRF.getAddress},
             "data": data
         };
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
 
         Bluetooth.println(dataIntent);
+        Bangle.buzz(1000, 1).then(() => Bangle.showClock());
     });
 }
 
@@ -89,7 +88,7 @@ function logic(config) {
 
     var layout_start = new Layout({
         type: "v", c: [
-            {type: "img", pad: 12, src: big_img},
+            {type: "img", pad: 8, src: big_img},
             {type: "txt", font: "Vector:14", label: "Press button to call", id: "press_button_to_call"},
             {type: "txt", font: "Vector:14", label: "Emergency Services", id: "emergency_services"},
             {type: "btn", pad: 4, label: "SOS", cb: () => {

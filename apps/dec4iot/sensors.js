@@ -108,15 +108,13 @@ function gatherAllData() {
         data.battery = E.getBattery();
         done.battery = true;
 
+        data.health = Bangle.getHealthStatus();
+        done.health = true;
+
         Bangle.getPressure().then(pressure => {
             data.baro = pressure;
             done.baro = true;
         });
-
-        Bangle.on('HRM', (_) => {
-            data.health = Bangle.getHealthStatus();
-            done.health = true;
-        })
 
         let intervalId = setInterval(() => {
             if(allTrue(done)) {
