@@ -21,13 +21,6 @@ let compCb = (a) => {};
 let baroCb = (a) => {};
 let hrmCb = (a) => {};
 
-let data = {
-    accl: {},
-    comp: {},
-    baro: {},
-    hrm: {}
-}
-
 let currentlyGathering = false;
 
 function internalAccelCb(accel) {
@@ -84,6 +77,19 @@ function deactivateHRM() {
     Bangle.on('HRM', (x) => {})
 }
 
+function activateAll() {
+    activateAcceleration();
+    activateBarometer();
+    activateCompass();
+    activateHRM();
+}
+function deactivateAll() {
+    deactivateAcceleration();
+    deactivateBarometer();
+    deactivateCompass();
+    deactivateHRM();
+}
+
 function allTrue(object) {
     for (let key in object) {
         if (!object[key]) {
@@ -95,10 +101,7 @@ function allTrue(object) {
 
 function gatherAllData() {
     return new Promise((res, rej) => {
-        activateAcceleration();
-        activateBarometer();
-        activateCompass();
-        activateHRM();
+        activateAll();
 
         currentlyGathering = true;
 
@@ -106,27 +109,37 @@ function gatherAllData() {
             accl: false,
             comp: false,
             baro: false,
-            hrm: false
-        }
+            health: false
+        };
+        
+        let data = {
+            accl: {},
+            comp: {},
+            baro: {},
+            health: {}
+        };
+
+        data.accl = Bangle.getAccel();
+        done.accl = true;
+
+        data.comp = Bangle.getCompass()
+        done.comp = true;
+
+        data.health = Bangle.getHealthStatus();
+        done.health = true;
+
+        Bangle.getPressure().then(pressure => {
+            data.baro = pressure;
+            done.baro = true;
+        });
 
         let intervalId = setInterval(() => {
-            Object.keys(data).forEach(i => {
-                let e = data[i];
-                if(e !== {}) {done[i] = true;}
-            });
-
             if(allTrue(done)) {
-                currentlyGathering = false;
+                deactivateAll();
                 clearInterval(intervalId);
                 res(data);
             }
-
         }, 500);
-
-        deactivateAcceleration();
-        deactivateBarometer();
-        deactivateCompass();
-        deactivateHRM();
     });
 }
 

@@ -16,13 +16,7 @@
     along with this program. If not, see <https://www.gnu.org/licenses/> or <https://choosealicense.com/licenses/gpl-3.0/>.
 **/
 
-var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
-
-// TODO: This needs to be overhauled to support Senml!
-// TODO: This needs to be overhauled to support Senml!
-// TODO: This needs to be overhauled to support Senml!
-// TODO: This needs to be overhauled to support Senml!
 
 // Config Functions ===
 function readConfig() {

@@ -16,10 +16,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/> or <https://choosealicense.com/licenses/gpl-3.0/>.
 **/
 
-var http = require('dec4iot_lib_http');
 var sensors = require('dec4iot_lib_sensor');
 var Layout = require('Layout');
-
 
 // clear the screen
 g.clear();
@@ -88,7 +86,6 @@ function logic(config) {
     sensors.activateAcceleration();
     sensors.activateBarometer();
     sensors.activateCompass();
-    sensors.activateHRM();
 
     var layout_start = new Layout({
         type: "v", c: [
