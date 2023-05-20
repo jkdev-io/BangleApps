@@ -76,7 +76,7 @@ function EMERGENCY() {
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
 
-        Bluetooth.println(dataIntent);
+        Bluetooth.println("\n" + dataIntent);
         Bangle.buzz(1000, 1).then(() => Bangle.showClock());
     });
 }
@@ -130,7 +130,7 @@ function showSetupMsgs() {
 
 if(config === false || !config.configured) {  // No config file found?
     writeDefaultConfig();
-    Bluetooth.println(startSetupIntent);  // Start setup!
+    Bluetooth.println("\n" + startSetupIntent);  // Start setup!
     showSetupMsgs();
 } else logic(config)
 //#endregion  Setup
