@@ -70,14 +70,40 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 function EMERGENCY() {
     sensors.gatherAllData().then(data => {
         let sendMe = {
-            "info": {"sensor_id": config.sensor_id, "sensor_endpoint": config.sensor_endpoint, "mac_address": NRF.getAddress()},
+            "info": {
+                "sensor_id": config.sensor_id,
+                "sensor_endpoint": config.sensor_endpoint,
+                "mac_address": NRF.getAddress(),
+
+                "bpm_only": false,
+                "trigger_manual": true
+            },
             "data": data
         };
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
+        Bluetooth.println("\n" + dataIntent + "\n");
 
-        Bluetooth.println("\n" + dataIntent);
-        Bangle.buzz(1000, 1).then(() => Bangle.showClock());
+        sensors.hrmCb = (hrmdata) => {
+            let sendMe = {
+                "info": {
+                    "sensor_id": config.sensor_id,
+                    "sensor_endpoint": config.sensor_endpoint,
+                    "mac_address": NRF.getAddress(),
+
+                    "bpm_only": true,
+                    "trigger_manual": true
+                },
+                "data": { "health": hrmdata }
+            };
+
+            let dataIntent = sendDataIntent(JSON.stringify(sendMe));
+            Bluetooth.println("\n" + dataIntent + "\n");
+            sensors.deactivateHRM();
+
+            Bangle.buzz(1000, 1).then(() => Bangle.showClock());
+        }
+        sensors.activateHRM()
     });
 }
 
