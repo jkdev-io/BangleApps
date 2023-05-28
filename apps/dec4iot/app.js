@@ -58,7 +58,7 @@ function writeDefaultConfig() {
 
 //#region  Android
 var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  // Sending this to Gadgetbridge will start Onboarding App
-var sendDataIntent = (data) => { return JSON.stringify({t: "intent", target: "broadcastreceiver", action: "me.byjkdev.dec4iot.intents.banglejs.SEND_DATA", "extra": { "json_data": data }, class: "run.jkdev.dec4iot.jetpack.BangleJsDataReceiver", mimetype: "application/json"}); } // Sending this to Gadgetbridge will tell Onboarding App to send data
+var sendDataIntent = (data) => { return JSON.stringify({t: "intent", target: "broadcastreceiver", action: "me.byjkdev.dec4iot.intents.banglejs.SEND_DATA", "extra": { "json_data": data }, package: "run.jkdev.dec4iot.jetpack", class: "run.jkdev.dec4iot.jetpack.BangleJsSendDataReceiver", mimetype: "application/json"}); } // Sending this to Gadgetbridge will tell Onboarding App to send data
 function startLogic() {  // run by onboarding app; start logic so no app restart is needed
     g.clear();
     g.reset().clearRect(Bangle.appRect)
@@ -70,35 +70,35 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 function EMERGENCY() {
     sensors.gatherAllData().then(data => {
         let sendMe = {
-            "i": {
-                "id": config.sensor_id,
-                "ep": config.sensor_endpoint,
-                "mac": NRF.getAddress(),
+            "info": {
+                "sensor_id": config.sensor_id,
+                "sensor_endpoint": config.sensor_endpoint,
+                "mac_address": NRF.getAddress(),
 
-                "bpm": false,
-                "man": true
+                "bpm_only": false,
+                "trigger_manual": true
             },
-            "d": data
+            "data": data
         };
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
-        Bluetooth.println("\n" + dataIntent + "\n");
+        Bluetooth.println("\n" + dataIntent);
 
         sensors.hrmCb = (hrmdata) => {
             let sendMe = {
-                "i": {
-                    "id": config.sensor_id,
-                    "ep": config.sensor_endpoint,
-                    "mac": NRF.getAddress(),
+                "info": {
+                    "sensor_id": config.sensor_id,
+                    "sensor_endpoint": config.sensor_endpoint,
+                    "mac_address": NRF.getAddress(),
 
-                    "bpm": true,
-                    "man": true
+                    "bpm_only": true,
+                    "trigger_manual": true
                 },
-                "d": { "health": hrmdata }
+                "data": { "health": hrmdata }
             };
 
             let dataIntent = sendDataIntent(JSON.stringify(sendMe));
-            Bluetooth.println("\n" + dataIntent + "\n");
+            Bluetooth.println("\n" + dataIntent);
             sensors.deactivateHRM();
 
             Bangle.buzz(1000, 1).then(() => Bangle.showClock());
