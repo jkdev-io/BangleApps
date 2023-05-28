@@ -84,7 +84,7 @@ function EMERGENCY() {
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
         Bluetooth.println("\n" + dataIntent);
 
-        sensors.hrmCb = (hrmdata) => {
+        Bangle.on('hrm', hrm => {
             let sendMe = {
                 "info": {
                     "sensor_id": config.sensor_id,
@@ -102,7 +102,7 @@ function EMERGENCY() {
             sensors.deactivateHRM();
 
             Bangle.buzz(1000, 1).then(() => Bangle.showClock());
-        }
+        });
         sensors.activateHRM()
     });
 }
