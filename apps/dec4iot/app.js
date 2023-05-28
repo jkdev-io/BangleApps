@@ -58,7 +58,7 @@ function writeDefaultConfig() {
 
 //#region  Android
 var startSetupIntent = JSON.stringify({t: "intent", target: "activity", action: "me.byjkdev.dec4iot.intents.banglejs.SETUP", flags: ["FLAG_ACTIVITY_NEW_TASK"]});  // Sending this to Gadgetbridge will start Onboarding App
-var sendDataIntent = (data) => { return JSON.stringify({t: "intent", target: "broadcastreceiver", action: "me.byjkdev.dec4iot.intents.banglejs.SEND_DATA", "extra": { "json_data": data }, package: "run.jkdev.dec4iot.jetpack", class: "run.jkdev.dec4iot.jetpack.BangleJsSendDataReceiver", mimetype: "application/json"}); } // Sending this to Gadgetbridge will tell Onboarding App to send data
+var sendDataIntent = (data) => { return JSON.stringify({t: "intent", target: "broadcastreceiver", action: "me.byjkdev.dec4iot.intents.banglejs.SEND_DATA", "extra": { "json_data": data }, package: "run.jkdev.dec4iot.jetpack", class: "run.jkdev.dec4iot.jetpack.BangleJsDataReceiver", mimetype: "application/json"}); } // Sending this to Gadgetbridge will tell Onboarding App to send data
 function startLogic() {  // run by onboarding app; start logic so no app restart is needed
     g.clear();
     g.reset().clearRect(Bangle.appRect)
