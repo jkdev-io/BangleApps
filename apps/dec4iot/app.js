@@ -85,6 +85,8 @@ function EMERGENCY() {
         Bluetooth.println("\n" + dataIntent);
 
         Bangle.on('hrm', hrm => {
+            Terminal.println("HRM EVENT RECEIVED")
+
             let sendMe = {
                 "info": {
                     "sensor_id": config.sensor_id,
@@ -94,7 +96,7 @@ function EMERGENCY() {
                     "bpm_only": true,
                     "trigger_manual": true
                 },
-                "data": { "hrm": hrmdata }
+                "data": { "hrm": hrm }
             };
 
             let dataIntent = sendDataIntent(JSON.stringify(sendMe));
@@ -104,6 +106,7 @@ function EMERGENCY() {
             Bangle.buzz(1000, 1).then(() => Bangle.showClock());
         });
         sensors.activateHRM()
+        Terminal.println("HRM ACTIVATED")
     });
 }
 
