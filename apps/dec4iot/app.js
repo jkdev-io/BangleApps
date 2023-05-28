@@ -71,12 +71,12 @@ function EMERGENCY() {
     sensors.gatherAllData().then(data => {
         let sendMe = {
             "info": {
-                "sensor_id": config.sensor_id,
-                "sensor_endpoint": config.sensor_endpoint,
-                "mac_address": NRF.getAddress(),
+                "id": config.sensor_id,
+                "endp": config.sensor_endpoint,
+                "mac": NRF.getAddress(),
 
-                "bpm_only": false,
-                "trigger_manual": true
+                "bpm": false,
+                "man": true
             },
             "data": data
         };
