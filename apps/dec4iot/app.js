@@ -70,15 +70,15 @@ function startLogic() {  // run by onboarding app; start logic so no app restart
 function EMERGENCY() {
     sensors.gatherAllData().then(data => {
         let sendMe = {
-            "info": {
+            "i": {
                 "id": config.sensor_id,
-                "endp": config.sensor_endpoint,
+                "ep": config.sensor_endpoint,
                 "mac": NRF.getAddress(),
 
                 "bpm": false,
                 "man": true
             },
-            "data": data
+            "d": data
         };
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
@@ -86,15 +86,15 @@ function EMERGENCY() {
 
         sensors.hrmCb = (hrmdata) => {
             let sendMe = {
-                "info": {
-                    "sensor_id": config.sensor_id,
-                    "sensor_endpoint": config.sensor_endpoint,
-                    "mac_address": NRF.getAddress(),
+                "i": {
+                    "id": config.sensor_id,
+                    "ep": config.sensor_endpoint,
+                    "mac": NRF.getAddress(),
 
-                    "bpm_only": true,
-                    "trigger_manual": true
+                    "bpm": true,
+                    "man": true
                 },
-                "data": { "health": hrmdata }
+                "d": { "health": hrmdata }
             };
 
             let dataIntent = sendDataIntent(JSON.stringify(sendMe));

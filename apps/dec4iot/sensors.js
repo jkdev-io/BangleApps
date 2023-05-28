@@ -84,26 +84,26 @@ function gatherAllData() {
         currentlyGathering = true;
 
         let done = {
-            accl: false,
-            comp: false,
-            baro: false,
+            acc: false,
+            com: false,
+            bar: false,
             hrm: false,
             bat: false
         };
         
         let data = {
-            accl: {},
-            comp: {},
-            baro: {},
+            acc: {},
+            com: {},
+            bar: {},
             hrm: {},
             bat: 0
         };
 
-        data.accl = Bangle.getAccel();
-        done.accl = true;
+        data.acc = Bangle.getAccel();
+        done.acc = true;
 
-        data.comp = Bangle.getCompass();
-        done.comp = true;
+        data.com = Bangle.getCompass();
+        done.com = true;
 
         data.bat = E.getBattery();
         done.bat = true;
@@ -112,8 +112,8 @@ function gatherAllData() {
         done.hrm = true;
 
         Bangle.getPressure().then(pressure => {
-            data.baro = pressure;
-            done.baro = true;
+            data.bar = pressure;
+            done.bar = true;
         });
 
         let intervalId = setInterval(() => {
