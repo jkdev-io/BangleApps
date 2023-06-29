@@ -183,7 +183,7 @@ TODO:
                     }).addTo(map);
                     let marker = new L.marker(latlon).addTo(map);
                     map.fitBounds(latlon.toBounds(2000/*meters*/), {animation: false});
-                  }, 100);
+                  }, 500);
                 }
                 resolve();
               });
@@ -239,6 +239,8 @@ TODO:
         document.getElementById("mapContainer").style.display = "";
         document.getElementById("maptiles").style.display="none";
         document.getElementById("uploadbuttons").style.display="none";
+        map.invalidateSize();
+        map.locate({setView: true, maxZoom: 16, enableHighAccuracy:true});
       }
 
       // -----------------------------------------------------
