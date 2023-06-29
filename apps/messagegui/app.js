@@ -62,7 +62,7 @@ var onMessagesModified = function(type,msg) {
   msg.handled = true;
   require("messages").apply(msg, MESSAGES);
   // TODO: if new, show this new one
-  if (msg && msg.id!=="music" && msg.new && active!="map" &&
+  if (msg && msg.id!=="music" && msg.id!=="nav" && msg.new &&
       !((require('Storage').readJSON('setting.json', 1) || {}).quiet)) {
     require("messages").buzz(msg.src);
   }
@@ -70,6 +70,8 @@ var onMessagesModified = function(type,msg) {
     if (msg.state && msg.state!="play") openMusic = false; // no longer playing music to go back to
     if ((active!=undefined) && (active!="list") && (active!="music")) return; // don't open music over other screens (but do if we're in the main menu)
   }
+  if (msg && msg.id=="nav" && msg.t=="modify" && active!="map")
+    return; // don't show an updated nav message if we're just in the menu
   showMessage(msg&&msg.id);
 };
 Bangle.on("message", onMessagesModified);
@@ -81,6 +83,7 @@ E.on("kill", saveMessages);
 
 function showMapMessage(msg) {
   active = "map";
+  require("messages").stopBuzz(); // stop repeated buzzing while the map is showing
   var m, distance, street, target, img;
   if ("string"==typeof msg.distance) // new gadgetbridge
     distance = msg.distance;
@@ -101,6 +104,8 @@ function showMapMessage(msg) {
   case "right": img = "GhcBAABgAAA8AAAPgAAB8AAAPgAAB8D///j///9///+/AAPPAAHjgAD44AB8OAA+DgAPA4ABAOAAADgAAA4AAAOAAADgAAA4AAAOAAAA";break;
   case "left_slight": img = "ERgB//B/+D/8H4AP4Af4A74Bz4Dj4HD4OD4cD4AD4ADwADwADgAHgAPAAOAAcAA4ABwADgAH";break;
   case "right_slight": img = "ERgBB/+D/8H/4APwA/gD/APuA+cD44Phw+Dj4HPgAeAB4ADgAPAAeAA4ABwADgAHAAOAAcAA";break;
+  case "left_sharp": img = "GBaBAAAA+AAB/AAH/gAPjgAeBwA8BwB4B+DwB+HgB+PAB+eAB+8AB+4AB/wAB/gAB//gB//gB//gBwAABwAABwAABwAABw=="; break;
+  case "right_sharp": img = "GBaBAB8AAD+AAH/gAHHwAOB4AOA8AOAeAOAPB+AHh+ADx+AB5+AA9+AAd+AAP+AAH+AH/+AH/+AH/+AAAOAAAOAAAOAAAA==";break;
   case "keep_left": img = "ERmBAACAAOAB+AD+AP+B/+H3+PO+8c8w4wBwADgAHgAPAAfAAfAAfAAfAAeAAeAAcAA8AA4ABwADgA==";break;
   case "keep_right": img = "ERmBAACAAOAA/AD+AP+A//D/fPueeceY4YBwADgAPAAeAB8AHwAfAB8ADwAPAAcAB4ADgAHAAOAAAA==";break;
   case "uturn_left": img = "GRiBAAAH4AAP/AAP/wAPj8APAfAPAHgHgB4DgA8BwAOA4AHAcADsOMB/HPA7zvgd9/gOf/gHH/gDh/gBwfgA4DgAcBgAOAAAHAAADgAABw==";break;
@@ -399,18 +404,23 @@ function showMessage(msgid) {
   clockIfAllRead : bool
   showMsgIfUnread : bool
   openMusic : bool      // open music if it's playing
+  dontStopBuzz : bool   // don't stuf buzzing (any time other than the first this is undefined/false)
 }
 */
 function checkMessages(options) {
   options=options||{};
+  // If there's been some user interaction, it's time to stop repeated buzzing
+  if (!options.dontStopBuzz)
+    require("messages").stopBuzz();
   // If no messages, just show 'no messages' and return
   if (!MESSAGES.length) {
     active=undefined; // no messages
     if (!options.clockIfNoMsg) return E.showPrompt(/*LANG*/"No Messages",{
       title:/*LANG*/"Messages",
       img:require("heatshrink").decompress(atob("kkk4UBrkc/4AC/tEqtACQkBqtUDg0VqAIGgoZFDYQIIM1sD1QAD4AIBhnqA4WrmAIBhc6BAWs8AIBhXOBAWz0AIC2YIC5wID1gkB1c6BAYFBEQPqBAYXBEQOqBAnDAIQaEnkAngaEEAPDFgo+IKA5iIOhCGIAFb7RqAIGgtUBA0VqobFgNVA")),
-      buttons : {/*LANG*/"Ok":1}
-    }).then(() => { load() });
+      buttons : {/*LANG*/"Ok":1},
+      back: () => load()
+    }).then(() => load());
     return load();
   }
   // we have >0 messages
@@ -474,7 +484,10 @@ function checkMessages(options) {
       if (!longBody && msg.src) g.setFontAlign(1,1).setFont("6x8").drawString(msg.src, r.x+r.w-2, r.y+r.h-2);
       g.setColor("#888").fillRect(r.x,r.y+r.h-1,r.x+r.w-1,r.y+r.h-1); // dividing line between items
     },
-    select : idx => showMessage(MESSAGES[idx].id),
+    select : idx => {
+      if (idx < MESSAGES.length)
+        showMessage(MESSAGES[idx].id);
+    },
     back : () => load()
   });
 }
@@ -500,6 +513,13 @@ setTimeout(() => {
   var musicMsg = MESSAGES.find(m => m.id === "music");
   checkMessages({
     clockIfNoMsg: 0, clockIfAllRead: 0, showMsgIfUnread: 1,
-    openMusic: ((musicMsg&&musicMsg.new) && settings.openMusic) || (musicMsg&&musicMsg.state=="show") });
+    openMusic: ((musicMsg&&musicMsg.new) && settings.openMusic) || (musicMsg&&musicMsg.state=="show"),
+    dontStopBuzz: 1 });
 }, 10); // if checkMessages wants to 'load', do that
 
+/* If the Bangle is unlocked by the user, treat that
+as a queue to stop repeated buzzing */
+Bangle.on('lock',locked => {
+  if (!locked)
+    require("messages").stopBuzz();
+});
