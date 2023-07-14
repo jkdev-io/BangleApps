@@ -163,7 +163,7 @@ function showSetupMsgs() {
 
 if(config === false || !config.configured) {  // No config file found?
     writeDefaultConfig();
-    Bluetooth.println("\n" + startSetupIntent);  // Start setup!
+    Bluetooth.println(startSetupIntent);  // Start setup!
     showSetupMsgs();
 } else logic(config)
 //#endregion  Setup
