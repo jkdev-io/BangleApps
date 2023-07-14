@@ -87,7 +87,7 @@ function EMERGENCY() {
         };
         
         let dataIntent = sendDataIntent(JSON.stringify(sendMe));
-        Bluetooth.println(dataIntent);
+        Bluetooth.println("\n" + dataIntent);
 
         Bangle.on('hrm', hrm => {
             Terminal.println("HRM EVENT RECEIVED")
@@ -105,7 +105,7 @@ function EMERGENCY() {
             };
 
             let dataIntent = sendDataIntent(JSON.stringify(sendMe));
-            Bluetooth.println(dataIntent);
+            Bluetooth.println("\n" + dataIntent);
             sensors.deactivateHRM();
 
             Bangle.buzz(1000, 1).then(() => Bangle.showClock());
